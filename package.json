@@ -5,8 +5,8 @@
   },
   "dependencies": {
     "@stoplight/spectral-core": "^1.11.1",
-    "@stoplight/spectral-functions": "^1.6.1",
-    "@stoplight/spectral-parsers": "^1.0.1"
+    "@stoplight/spectral-parsers": "^1.0.1",
+    "@stoplight/spectral-rulesets": "^1.6.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
