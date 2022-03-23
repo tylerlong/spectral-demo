@@ -3,7 +3,11 @@
   "scripts": {
     "test": "ts-node src/index.ts"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@stoplight/spectral-core": "^1.11.1",
+    "@stoplight/spectral-functions": "^1.6.1",
+    "@stoplight/spectral-parsers": "^1.0.1"
+  },
   "devDependencies": {
     "@types/node": "^17.0.23",
     "gts": "^3.1.0",
