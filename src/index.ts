@@ -1,22 +1,179 @@
 import {Spectral, Document, Ruleset} from '@stoplight/spectral-core';
-import {Yaml} from '@stoplight/spectral-parsers'; // make sure to install the package if you intend to use default parsers!
-import {oas} from '@stoplight/spectral-rulesets';
+import {Yaml} from '@stoplight/spectral-parsers';
+import {oas, asyncapi} from '@stoplight/spectral-rulesets';
 
 const myDocument = new Document(
-  `---
-responses:
-  '200':
-    description: ''`,
+  `
+openapi: 3.0.1
+info:
+  title: RingCentral Platform Info API
+  description: API to Get RingCentral Connect Platform Info and Status
+  contact:
+    name: RingCentral Connect Platform
+    url: http://developers.ringcentral.com
+    email: platform@ringcentral.com
+  license:
+    name: RingCentral API License Agreement and Terms of Use
+    url: https://www.ringcentral.com/legal/apilitos.html
+  version: 1.0.36
+servers:
+  - url: https://platform.ringcentral.com/
+tags:
+  - name: API Info
+paths:
+  /restapi:
+    get:
+      tags:
+        - API Info
+      summary: Get API Versions
+      description: Returns current API version(s) and server info.
+      operationId: readAPIVersions
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetVersionsResponse'
+      x-api-group: "restapi"
+      x-auth-required: false
+      x-throttling-group: "NoThrottling"
+      x-metered-api: true
+      x-metering-group: "Free"
+      x-docs-level: Public
+  /restapi/{apiVersion}:
+    get:
+      tags:
+        - API Info
+      summary: Get Version Info
+      description: Returns current API version info by apiVersion.
+      operationId: readAPIVersion
+      parameters:
+        - name: apiVersion
+          in: path
+          description: API version to be requested, for example 'v1.0'
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: API Version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetVersionResponse'
+      x-api-group: "restapi/version"
+      x-auth-required: false
+      x-throttling-group: "NoThrottling"
+      x-metered-api: true
+      x-metering-group: "Free"
+      x-docs-level: Public
+  /restapi/v1.0/status:
+    get:
+      tags:
+        - API Info
+      summary: Get Service Status
+      description: Returns current PAS service status.
+      operationId: readAPIStatus
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "503":
+          description: VoIP-only Mode
+          content: {}
+      x-api-group: "restapi/status"
+      x-auth-required: false
+      x-throttling-group: "NoThrottling"
+      x-metered-api: true
+      x-metering-group: "Free"
+      x-docs-level: Public
+      x-availability: "Limited"
+components:
+  schemas:
+    GetVersionsResponse:
+      type: object
+      properties:
+        uri:
+          type: string
+          description: Canonical URI of the API version
+        apiVersions:
+          type: array
+          description: 'Full API version information: uri, number, release date'
+          items:
+            $ref: '#/components/schemas/VersionInfo'
+        serverVersion:
+          type: string
+          description: Server version
+        serverRevision:
+          type: string
+          description: Server revision
+      example:
+        application/json:
+          uri: https://platform.ringcentral.com/restapi
+          apiVersions:
+            - uri: https://platform.ringcentral.com/restapi/v1.0
+              versionString: 1.0.34
+              releaseDate: 2018-02-09T00:00:00.000Z
+              uriString: v1.0
+          serverVersion: 10.0.4.7854
+          serverRevision: 32f2a96b769c
+    VersionInfo:
+      type: object
+      properties:
+        uri:
+          type: string
+          description: Canonical URI of API versions
+        versionString:
+          type: string
+          description: Version of the RingCentral REST API
+        releaseDate:
+          type: string
+          description: Release date of this version
+        uriString:
+          type: string
+          description: URI part determining the current version
+    GetVersionResponse:
+      type: object
+      properties:
+        uri:
+          type: string
+          description: Canonical URI of the version info resource
+        versionString:
+          type: string
+          description: Version of the RingCentral REST API
+        releaseDate:
+          type: string
+          description: Release date of this version
+        uriString:
+          type: string
+          description: URI part determining the current version
+      example:
+        application/json:
+          uri: https://platform.ringcentral.com/restapi/v1.0
+          versionString: 1.0.34
+          releaseDate: 2018-02-09T00:00:00.000Z
+          uriString: v1.0
+x-service-version: "v1"
+x-service-interface: "rest"
+x-service-name: "pas"
+x-internal-api: false
+x-failover-strategy: "Hardening"
+x-blacklisting-strategy: "Hardening"
+x-balancing-method: "ConsistentHashByHeader"
+x-availability: "High"
+x-team: PLA IPA
+`.trim(),
   Yaml,
   '/my-file'
 );
 
 const spectral = new Spectral();
-spectral.setRuleset(oas as unknown as Ruleset);
+spectral.setRuleset({...asyncapi, ...oas} as unknown as Ruleset);
 
 const main = async () => {
-  const result = await spectral.run(myDocument);
-  console.log(JSON.stringify(result, null, 2));
+  const issues = await spectral.run(myDocument);
+  console.log(JSON.stringify(issues, null, 2));
 };
 
 main();
