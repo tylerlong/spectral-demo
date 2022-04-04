@@ -5,7 +5,7 @@ rules:
     message: '{{description}} (lower case and separated with hyphens)'
     formats: [oas3]
     type: style
-    severity: off
+    severity: error
     given: $.paths[*]~
     then:
       function: pattern

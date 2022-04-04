@@ -15,7 +15,7 @@ servers:
 tags:
   - name: API Info
 paths:
-  /restapi:
+  /rest_api:
     get:
       tags:
         - API Info
