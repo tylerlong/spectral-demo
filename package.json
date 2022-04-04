@@ -6,9 +6,11 @@
   "dependencies": {
     "@stoplight/spectral-core": "^1.11.1",
     "@stoplight/spectral-parsers": "^1.0.1",
-    "@stoplight/spectral-rulesets": "^1.6.0"
+    "@stoplight/spectral-rulesets": "^1.6.0",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^17.0.23",
     "gts": "^3.1.0",
     "ts-node": "^10.7.0",

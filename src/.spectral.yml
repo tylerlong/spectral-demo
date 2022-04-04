@@ -1,0 +1,13 @@
+extends: ["spectral:oas", "spectral:asyncapi"]
+rules:
+  ensure-paths-kebab-case:
+    description: Paths must be in kebab-case.
+    message: '{{description}} (lower case and separated with hyphens)'
+    formats: [oas3]
+    type: style
+    severity: off
+    given: $.paths[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(\/|[a-z0-9-.]+|{[a-zA-Z0-9]+})+$"
