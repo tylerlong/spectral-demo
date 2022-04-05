@@ -12,13 +12,36 @@ const myDocument = new Document(
 
 const spectral = new Spectral();
 const main = async () => {
-  const customRules = await bundleAndLoadRuleset(
-    join(__dirname, '.spectral.yml'),
-    {
-      fs,
-      fetch: globalThis.fetch,
-    }
-  );
+  const fakeFS: any = {
+    promises: {
+      async readFile(filepath: string) {
+        if (filepath === '/.spectral-default.yaml') {
+          return `extends: ["spectral:oas", "spectral:asyncapi"]
+rules:
+  ensure-paths-kebab-case:
+    description: Paths must be in kebab-case.
+    message: '{{description}} (lower case and separated with hyphens)'
+    formats: [oas3]
+    type: style
+    severity: error
+    given: $.paths[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(/|[a-z0-9-.]+|{[a-zA-Z0-9]+})+$"`;
+        }
+        return fs.promises.readFile(filepath);
+      },
+    },
+  };
+  // /.spectral-default.yaml is a fake file which doesn't exist
+  const customRules = await bundleAndLoadRuleset('/.spectral-default.yaml', {
+    // const customRules = await bundleAndLoadRuleset(
+    //   join(__dirname, '.spectral.yml'),
+    //   {
+    fs: fakeFS,
+    fetch: globalThis.fetch,
+  });
   spectral.setRuleset(customRules);
   const issues = await spectral.run(myDocument);
   console.log(JSON.stringify(issues, null, 2));
