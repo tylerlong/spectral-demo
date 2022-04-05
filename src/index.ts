@@ -1,12 +1,11 @@
-import {Spectral, Document, Ruleset} from '@stoplight/spectral-core';
+import {Spectral, Document} from '@stoplight/spectral-core';
 import {Yaml} from '@stoplight/spectral-parsers';
-import {readFileSync} from 'fs';
-import {join} from 'path';
 import {bundleAndLoadRuleset} from '@stoplight/spectral-ruleset-bundler/dist/loader/node';
+import {join} from 'path';
 import * as fs from 'fs';
 
 const myDocument = new Document(
-  readFileSync(join(__dirname, 'spec.yml'), 'utf-8').trim(),
+  fs.readFileSync(join(__dirname, 'spec.yml'), 'utf-8').trim(),
   Yaml,
   'spec.yml'
 );
@@ -17,10 +16,10 @@ const main = async () => {
     join(__dirname, '.spectral.yml'),
     {
       fs,
-      fetch: {} as any,
+      fetch: globalThis.fetch,
     }
   );
-  spectral.setRuleset(customRules as unknown as Ruleset);
+  spectral.setRuleset(customRules);
   const issues = await spectral.run(myDocument);
   console.log(JSON.stringify(issues, null, 2));
 };

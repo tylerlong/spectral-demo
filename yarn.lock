@@ -324,7 +324,7 @@
     tslib "^2.3.1"
     validate-npm-package-name "3.0.0"
 
-"@stoplight/spectral-rulesets@>=1", "@stoplight/spectral-rulesets@^1.7.0":
+"@stoplight/spectral-rulesets@>=1":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@stoplight/spectral-rulesets/-/spectral-rulesets-1.7.0.tgz#13ebb61a98ef67111fb3a4b4bb0dc2ca6aad51d3"
   integrity sha512-QXnidFatoBQVBv4iHtJyg46zjEeyooTVOgfmsc+UHwAPu0u0YNF7DW52wZCwBU0RMknExDRbopc/QGvO7srmCg==

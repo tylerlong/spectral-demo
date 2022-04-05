@@ -3,11 +3,13 @@
   "scripts": {
     "test": "ts-node src/index.ts"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
     "@stoplight/spectral-core": "^1.11.1",
     "@stoplight/spectral-parsers": "^1.0.1",
-    "@stoplight/spectral-ruleset-bundler": "^1.2.1",
-    "@stoplight/spectral-rulesets": "^1.7.0"
+    "@stoplight/spectral-ruleset-bundler": "^1.2.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
