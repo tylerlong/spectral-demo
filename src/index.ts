@@ -42,7 +42,7 @@ rules:
     fs: fakeFS,
     fetch: globalThis.fetch,
   });
-  spectral.setRuleset(customRules);
+  spectral.setRuleset(customRules as any);
   const issues = await spectral.run(myDocument);
   console.log(JSON.stringify(issues, null, 2));
 };
